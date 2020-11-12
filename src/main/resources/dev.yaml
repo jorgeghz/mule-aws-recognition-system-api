@@ -1,0 +1,7 @@
+http:
+  port: "8081"
+environment: "[DEV]"
+
+aws:
+  clientToken: "![3/F1Bpx3ZvqJaD/6V2UYC7A06eh2sQw4]"
+  clientSecret: "![iS0gdpXUtmczRcFe6Jt4zr7zpU0gn4HL2j9tzDi+cFgiZ272AHsS8Qtvngl51irw]"

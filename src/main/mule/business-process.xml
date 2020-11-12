@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="process-image-flow" doc:id="074643c6-a8cc-490f-917c-ddb0bfbfbea7" >
+		<ee:transform doc:name="Transform Message" doc:id="56f267a3-3020-4122-a7d5-1d55cc61e749" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import fromBase64 from dw::core::Binaries
+output application/java
+---
+{
+	//image:fromBase64(payload.image as String) as Binary default ""
+	image:payload.image as String default ""
+	
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="awsCredentials" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	 accessToken:p('secure::aws.clientToken'),
+	 accessSecret:p('secure::aws.clientSecret')
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		
+		<logger level="INFO" doc:name="Logger" doc:id="eb1f6aac-a04d-4aec-ac48-6e5444a33df5" message="${secure::aws.clientToken}"/>
+		<java:invoke-static doc:name="AWS Label Rekognition" doc:id="cdc0f999-4acc-4c4f-9e8d-472ba044548c" class="com.emoran.ImageProcessor" method="getImageLabels(java.lang.String,java.lang.String,java.lang.String)">
+			<java:args ><![CDATA[#[{
+	base64Image: payload.image, 
+	accessToken: vars.awsCredentials.accessToken,
+	accessSecret:vars.awsCredentials.accessSecret
+	
+}]]]></java:args>
+		</java:invoke-static>
+		<ee:transform doc:name="Labels Response" doc:id="82eab1bc-d40a-4a3a-a246-c43dee5afb3f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
