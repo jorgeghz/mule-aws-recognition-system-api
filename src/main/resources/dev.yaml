@@ -5,3 +5,6 @@ environment: "[DEV]"
 aws:
   clientToken: "![3/F1Bpx3ZvqJaD/6V2UYC7A06eh2sQw4]"
   clientSecret: "![iS0gdpXUtmczRcFe6Jt4zr7zpU0gn4HL2j9tzDi+cFgiZ272AHsS8Qtvngl51irw]"
+  
+twitter:
+  bearerToken: "![0rLc9lZgDae2EEVoh1Lj5syat5PXj4EV+4slG2/r4s/2Uoae340KGEiBzjsmJhOQBejwa8XiWaWhoWrBzMJUWCIeGMtDpXsPH1YuIbtfyVc6vXRtd3zZHyZSVc067hh9p29Lfol/0nzlJM16bEx1zc+iv5bvOYoP]"

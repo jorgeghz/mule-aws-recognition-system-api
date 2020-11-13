@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="Twitter" doc:name="HTTP Request configuration" doc:id="a09a8ad7-6922-4391-acd5-eb19d7aaa793" basePath="/1.1" >
+		<http:request-connection protocol="HTTPS" host="api.twitter.com" port="443" />
+	</http:request-config>
+	<flow name="twitter-bussines-processFlow" doc:id="82c4119e-c954-4ab4-bb03-3ee2855c3690" >
+		<http:request method="GET" doc:name="Twitter Request" doc:id="836c3f33-b1f4-4dfc-b64a-9e7af72fbe6c" config-ref="Twitter" path="search/tweets.json">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	Authorization : p('secure::twitter.bearerToken')
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	q : payload.filter
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>
